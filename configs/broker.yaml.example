@@ -1,0 +1,32 @@
+# Broker Configuration
+# Copy this file to broker.yaml and customize for your environment.
+
+broker:
+  # Unique identifier for this broker. Must be unique across the cluster.
+  id: broker-1
+  # Address to listen on for client connections (PRODUCE, FETCH, COMMIT).
+  addr: "0.0.0.0:9092"
+  # Directory where partition log files are stored.
+  # Each partition creates a file: <data_dir>/<topic>-<partition>.log
+  data_dir: /var/lib/tuff-cuffka/broker-1
+
+controller:
+  # Addresses of all controller quorum nodes.
+  # The broker will try each address to find the current Raft leader.
+  addrs:
+    - "controller-1:9093"
+    - "controller-2:9093"
+    - "controller-3:9093"
+
+heartbeat:
+  # How often (ms) the broker sends BROKER_HEARTBEAT to the controller leader.
+  interval_ms: 3000
+  # If the controller doesn't receive a heartbeat within this window,
+  # it considers the broker dead and reassigns its partitions.
+  session_timeout_ms: 10000
+
+fetch:
+  # Default maximum time (ms) a FETCH request will long-poll before returning empty.
+  max_wait_ms: 500
+  # Default maximum bytes to return in a single FETCH response.
+  max_bytes: 1048576 # 1 MB

@@ -1,0 +1,33 @@
+# Controller Configuration
+# Copy this file to controller.yaml and customize for your environment.
+
+controller:
+  # Unique identifier for this controller node.
+  id: controller-1
+  # Address to listen on for client, broker, and Raft RPC connections.
+  addr: "0.0.0.0:9093"
+  # Directory where Raft state (log, snapshots) is persisted.
+  raft_dir: /var/lib/tuff-cuffka/controller-1
+
+raft:
+  # Peer controller nodes in the quorum (excluding self).
+  peers:
+    - id: controller-2
+      addr: "controller-2:9093"
+    - id: controller-3
+      addr: "controller-3:9093"
+  # Minimum election timeout (ms). Actual timeout is randomized
+  # between min and max to avoid split votes.
+  election_timeout_min_ms: 300
+  # Maximum election timeout (ms).
+  election_timeout_max_ms: 600
+  # How often (ms) the Raft leader sends heartbeat AppendEntries to followers.
+  heartbeat_interval_ms: 100
+
+# If a broker hasn't sent a heartbeat within this window (ms),
+# the controller considers it dead and reassigns its partitions.
+broker_session_timeout_ms: 10000
+
+# If a consumer group member hasn't sent a heartbeat within this window (ms),
+# the controller removes it from the group and triggers a rebalance.
+consumer_session_timeout_ms: 30000
